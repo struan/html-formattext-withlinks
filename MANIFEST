@@ -1,6 +1,7 @@
 Build.PL
 MANIFEST
 META.yml
+Makefile.PL
 lib/HTML/FormatText/WithLinks.pm
 t/01load.t
 t/02_basic_parse.t
