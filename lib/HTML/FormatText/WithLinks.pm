@@ -308,12 +308,12 @@ Struan Donald. E<lt>struan@cpan.orgE<gt>
 
 L<http://www.exo.org.uk/code/>
 
-Comments, the two parse routines and the required nudge to release all 
-this came from Ian Malpass E<lt>ian@indecorous.comE<gt>.
+Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom 
+formatting bits and the nudge to release the code.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Struan Donald. All rights reserved.
+Copyright (C) 2003 Struan Donald and Ian Malpass. All rights reserved.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
