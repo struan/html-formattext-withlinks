@@ -46,7 +46,7 @@ $correct_text = qq!This is a mail of some sort with a link[1].
 
 !;
 
-my $f = HTML::FormatText::WithLinks->new( leftmargin => 0, 
+$f = HTML::FormatText::WithLinks->new( leftmargin => 0, 
             before_link => "",
             after_link => "[%n]");
 
