@@ -8,7 +8,7 @@ Module::Build
         requires    =>  {
                             'HTML::FormatText'    =>  0,
                             'HTML::TreeBuilder'   =>  0,
-                            'URI::Base'           =>  0,  
+                            'URI::WithBase'       =>  0,  
         },
         build_requires  =>  {
                             'Test::More'          =>  0,
