@@ -11,11 +11,11 @@ ok($f, 'object created');
 
 my $text = $f->parse($html);
 
-my $correct_text = qq!This is a mail of some sort with a [0] link.
+my $correct_text = qq!This is a mail of some sort with a [1]link.
 
 
 
-[0] http://example.com/relative.html
+1. http://example.com/relative.html
 
 
 !;
