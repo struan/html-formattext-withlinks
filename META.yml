@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name: HTML-FormatText-LinksAsFootnotes
+version: 0.01
+license: perl
+distribution_type: module
+requires:
+  HTML::FormatText: 0
+  HTML::TreeBuilder: 0
+recommends: {}
+build_requires: {}
+conflicts: {}
+provides:
+  HTML::FormatText::LinksAsFootnotes:
+    file: lib/HTML/FormatText/LinksAsFootnotes.pm
+    version: 0.01
+generated_by: Module::Build version 0.21

@@ -1,0 +1,9 @@
+^_build
+^HTML-FormatText-LinksAsFootnotes-.*
+^Build$
+^blib
+~$
+\.bak$
+^MANIFEST\.SKIP$
+CVS
+^TODO
