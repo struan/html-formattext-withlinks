@@ -1,10 +1,10 @@
 # $Id$
 
 use Test::More tests => 5;
-use HTML::FormatText::LinksAsFootnotes;
+use HTML::FormatText::WithLinks;
 
 my $html = new_html();
-my $f = HTML::FormatText::LinksAsFootnotes->new( leftmargin => 0, 
+my $f = HTML::FormatText::WithLinks->new( leftmargin => 0, 
             before_link => "[%n] ",
             footnote => "[%n] %l");
 
@@ -24,7 +24,7 @@ my $correct_text = qq!This is a mail of some sort with a [1] link.
 ok($text, 'html formatted');
 is($text, $correct_text, 'html correctly formatted');
 
-$f = HTML::FormatText::LinksAsFootnotes->new( leftmargin => 0, 
+$f = HTML::FormatText::WithLinks->new( leftmargin => 0, 
             before_link => "[%n] ",
             footnote    =>  '');
 

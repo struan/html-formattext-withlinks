@@ -1,9 +1,9 @@
 # $Id$
 
 use Test::More tests => 3;
-use HTML::FormatText::LinksAsFootnotes;
+use HTML::FormatText::WithLinks;
 
-my $f = HTML::FormatText::LinksAsFootnotes->new( leftmargin => 0 );
+my $f = HTML::FormatText::WithLinks->new( leftmargin => 0 );
 
 ok($f, 'object created');
 
