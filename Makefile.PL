@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile
   (
    NAME        => 'HTML::FormatText::WithLinks',
-   VERSION     => '0.01',
+   VERSION     => '0.02',
    PL_FILES    => {},
    INSTALLDIRS => 'site',
    PREREQ_PM   => {

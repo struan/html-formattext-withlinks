@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: HTML-FormatText-WithLinks
-version: 0.01
+version: 0.02
 license: perl
 distribution_type: module
 requires:
@@ -14,5 +14,5 @@ conflicts: {}
 provides:
   HTML::FormatText::WithLinks:
     file: lib/HTML/FormatText/WithLinks.pm
-    version: 0.01
+    version: 0.02
 generated_by: Module::Build version 0.21
