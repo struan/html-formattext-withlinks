@@ -282,7 +282,7 @@ If footnote is set to '', no footnotes will be printed.
 link_num_generator is a sub that returns the value to be printed for a 
 given link number. The internal store starts numbering at 0.
 
-=over
+=back
 
 =head2 parse
 
