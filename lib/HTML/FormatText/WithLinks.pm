@@ -46,19 +46,10 @@ sub configure {
 
 # we need to do this as if you pass an HTML fragment without any
 # containing block level markup (e.g. a p tag) then no indentation
-# takes place so we grab out inital cursor position and then if
-# no indentation has taken place when we hit text we indent and then
-# carry on as normal
-sub start {
-    my $self = shift;
-    $self->{start_pos} = $self->{cur_pos};
-    $self->SUPER::start(@_);
-}
-
+# takes place so if we've not got a cur_pos we indent.
 sub textflow {
     my $self = shift;
-    $self->goto_lm unless defined $self->{cur_pos} 
-                   and $self->{cur_pos} > $self->{start_pos};
+    $self->goto_lm unless defined $self->{cur_pos}; 
     $self->SUPER::textflow(@_);
 }
 
