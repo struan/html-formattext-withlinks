@@ -7,3 +7,6 @@
 ^MANIFEST\.SKIP$
 CVS
 ^TODO
+^.cvsignore
+.#.*
+^cover_db

@@ -1,6 +1,7 @@
 Build.PL
 MANIFEST
-lib/HTML/FormatText/LinksAsFootnotes.pm
+META.yml
+lib/HTML/FormatText/WithLinks.pm
 t/01load.t
 t/02_basic_parse.t
 t/03_parse_with_links.t
@@ -8,4 +9,6 @@ t/04_parse_with_relative_links.t
 t/05_parse_with_html_fragment.t
 t/06_parse_file.t
 t/07_parse_missing_file.t
+t/08_custom_format.t
+t/99_pod.t
 t/file.html
