@@ -1,6 +1,11 @@
 # Changelog for HTML::FormatText::WithLinks
 
 ---
+version:    0.02
+date:       02/02/2004
+    Now call eof on HTML::TreeBuilder which fixes bug with last words in
+    HTML fragments sometimes being lost
+---
 version:    0.01
 date:       12/01/2004
 changes:
