@@ -1,6 +1,4 @@
-package HTML::FormatText::LinksAsFootnotes;
-
-# $Id$
+package HTML::FormatText::WithLinks;
 
 use strict;
 use URI::WithBase;
@@ -10,6 +8,19 @@ use vars qw($VERSION);
 
 $VERSION = '0.01';
 
+sub new {
+
+    my $proto = shift;
+    my $class = ref( $proto ) || $proto;
+    my $self  = $class->SUPER::new( @_ );
+    $self->configure() unless @_;
+
+
+    bless ( $self, $class );
+    return $self;
+
+}
+
 sub configure {
 
     my ($self, $hash) = @_;
@@ -18,6 +29,16 @@ sub configure {
     $self->{base} = $hash->{base};
     delete $hash->{base};
     $self->{base} =~ s#(.*?)/[^/]*$#$1/# if $self->{base};
+
+    $self->{before_link} = '[%n]';
+    $self->{after_link} = '';
+    $self->{footnote} = '%n. %l';
+    $self->{link_num_generator} = sub { return shift() + 1 };
+
+    foreach ( qw( before_link after_link footnote link_num_generator ) ) {
+        $self->{ $_ } = $hash->{ $_ } if exists $hash->{ $_ };
+        delete $hash->{ $_ };
+    }
 
     $self->SUPER::configure($hash);
 
@@ -53,8 +74,23 @@ sub a_start {
         my $u = URI::WithBase->new($href, $self->{base});
         push @{$self->{_links}}, $u->abs();
     }
-    $self->out( '[' . $#{$self->{_links}} .'] ' );
+    $self->out( $self->text('before_link') );
     $self->SUPER::a_start();
+
+}
+
+sub a_end {
+
+    my $self = shift;
+    my $node = shift;
+    my $text = $self->text('after_link');
+# If we're just dealing with a fragment of HTML, with a link at the
+# end, we get a space before the first footnote link if we do 
+# $self->out( '' )
+    if ($text ne '') {
+        $self->out( $text );
+    }
+    $self->SUPER::a_end();
 
 }
 
@@ -62,17 +98,39 @@ sub a_start {
 sub html_end {
 
     my $self = shift;
-    if ( $self->{_links} ) {
+    if ( $self->{_links} and $self->{footnote} ) {
         $self->nl; $self->nl; # be tidy
         $self->goto_lm;
         for (0 .. $#{$self->{_links}}) {
             $self->goto_lm;
-            $self->out("[$_] ". $self->{_links}->[$_]);
+            $self->out(
+                $self->text( 'footnote', $_, $self->{_links}->[$_] )
+            );
             $self->nl;
         }
     }
     $self->SUPER::end();
 
+}
+
+sub link_num {
+
+    my ($self, $num) = @_;
+    $num = $#{$self->{_links}} unless (defined $num);
+    return &{$self->{link_num_generator}}($num);
+
+}
+
+sub text {
+
+    my ($self, $type, $num, $href) = @_;
+    $href = $self->{_links}->[$#{$self->{_links}}]
+            unless (defined $num and defined $href);
+    $num = $self->link_num($num);
+    my $text = $self->{$type};
+    $text =~ s/%n/$num/g;
+    $text =~ s/%l/$href/g;
+    return $text;
 }
 
 sub parse {
@@ -126,13 +184,13 @@ __END__
 
 =head1 NAME 
 
-HTML::FormatText::LinksAsFootnotes - HTML to text conversion with links as footnotes
+HTML::FormatText::WithLinks - HTML to text conversion with links as footnotes
 
 =head1 SYNOPSIS
 
-    use HTML::FormatText::LinksAsFootnotes
+    use HTML::FormatText::WithLinks
 
-    my $f = HTML::FormatText::LinksAsFootnotes->new();
+    my $f = HTML::FormatText::WithLinks->new();
 
     my $html = qq(
     <html>
@@ -150,25 +208,81 @@ HTML::FormatText::LinksAsFootnotes - HTML to text conversion with links as footn
 
     # results in something like
 
-    Some html with a [0] link
+    Some html with a [1]link
 
-    [0] http://example.com/
+    1. http://example.com/
+
+    my $f2 = HTML::FormatText::WithLinks->new(
+        before_link => '',
+        after_link => ' [%l]',
+        footnote => ''
+    );
+
+    $text = $f2->parse($html);
+    print $text;
+
+    # results in something like
+
+    Some html with a link [http://example.com/]
+
+    my $f3 = HTML::FormatText::WithLinks->new(
+        link_num_generator => sub {
+            return "*" x (shift() + 1);
+        },
+        footnote => '[%n] %l'
+    );
+
+    $text = $f3->parse($html);
+    print $text;
+
+    # results in something like
+
+    Some html with a [*]link
+
+    [*] http://example.com/
 
 =head1 DESCRIPTION
 
-HTML::FormatText::LinksAsFootnotes takes HTML and turns it into plain text
-but prints all the links in the HTML as footnotes. Essentially it attempts
+HTML::FormatText::WithLinks takes HTML and turns it into plain text
+but prints all the links in the HTML as footnotes. By default, it attempts
 to mimic the format of the lynx text based web browser's --dump option.
 
 =head1 METHODS
 
 =head2 new
 
-    my $f = HTML::FormatText::LinksAsFootnotes->new( %options );
+    my $f = HTML::FormatText::WithLinks->new( %options );
 
 Returns a new instance. It accepts all the options of HTML::FormatText plus
+
+=over
+
+=item base
+
 a base option. This should be set to a URI which will be used to turn any 
 relative URIs on the HTML to absolute ones.
+
+=item before_link (default: '[%n]')
+
+=item after_link (default: '')
+
+=item footnote (default: '[%n] %l')
+
+a string to print before a link (i.e. when the <a> is found), 
+after link has ended (i.e. when then </a> is found) and when printing 
+out footnotes.
+
+"%n" will be replaced by the link number, "%l" will be replaced by the 
+link itself.
+
+If footnote is set to '', no footnotes will be printed.
+
+=item link_num_generator (default: sub { return shift() + 1 })
+
+link_num_generator is a sub that returns the value to be printed for a 
+given link number. The internal store starts numbering at 0.
+
+=over
 
 =head2 parse
 
