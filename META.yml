@@ -6,7 +6,7 @@ distribution_type: module
 requires:
   HTML::FormatText: 0
   HTML::TreeBuilder: 0
-  URI::Base: 0
+  URI::WithBase: 0
 recommends: {}
 build_requires:
   Test::More: 0
