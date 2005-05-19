@@ -1,5 +1,9 @@
 # Changelog for HTML::FormatText::WithLinks
 
+version:    0.03
+date:       19/05/2005
+    Added with_emphasis option
+    Delete HTML::TreeBuilder object after parsing
 ---
 version:    0.02
 date:       02/02/2004
