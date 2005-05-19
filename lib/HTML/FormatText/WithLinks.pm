@@ -161,8 +161,11 @@ sub parse {
     }
 
     $tree->eof();
-    return $self->format( $tree );
+    my $return_text = $self->format( $tree );
 
+    $tree->delete;
+
+    return $return_text;
 }
 
 sub parse_file {
@@ -183,8 +186,11 @@ sub parse_file {
     }
     $tree->eof();
 
-    return $self->format( $tree );
+    my $return_text = $self->format( $tree );
 
+    $tree->delete;
+
+    return $return_text;
 }
 
 sub error {
