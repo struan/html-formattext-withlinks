@@ -1,6 +1,6 @@
 # $Id: 02_basic_parse.t 383 2004-01-12 17:09:27Z struan $
 
-use Test::More tests => 3;
+use Test::More tests => 6;
 use HTML::FormatText::WithLinks;
 
 my $html = new_html();
@@ -11,8 +11,16 @@ ok($f, 'object created');
 my $text = $f->parse($html);
 
 ok($text, 'html formatted');
-is($text, "   This is a mail of _some_ /sort/\n\n   It has _some_ of the /words/ emphasised\n\n", 'html correctly formatted');
+is($text, "   This is a mail of _some_ /sort/\n\n   It has _some_ of the /words/ emphasised\n\n", 'html correctly formatted with emphasis');
 
+my $f2 = HTML::FormatText::WithLinks->new( );
+
+ok( $f2, "object created" );
+
+my $text2= $f2->parse( $html );
+
+ok( $text2, "html formatted" );
+is( $text2, "   This is a mail of some sort\n\n   It has some of the words emphasised\n\n", 'html correctly formatted without emphasis' ); 
 
 sub new_html {
 return <<'HTML';

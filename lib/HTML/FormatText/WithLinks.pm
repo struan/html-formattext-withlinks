@@ -59,13 +59,15 @@ sub a_start {
     my $node = shift;
     # local urls are no use so we have to make them absolute
     my $href = $node->attr('href') || '';
-    if ($href =~ m#^http:|^mailto:#) {
-        push @{$self->{_links}}, $href;
-    } else {
-        my $u = URI::WithBase->new($href, $self->{base});
-        push @{$self->{_links}}, $u->abs();
+    if ( $href ) {
+        if ($href =~ m#^http:|^mailto:#) {
+            push @{$self->{_links}}, $href;
+        } else {
+            my $u = URI::WithBase->new($href, $self->{base});
+            push @{$self->{_links}}, $u->abs();
+        }
+        $self->out( $self->text('before_link') );
     }
-    $self->out( $self->text('before_link') );
     $self->SUPER::a_start();
 
 }
@@ -128,7 +130,7 @@ sub html_end {
 
 }
 
-sub link_num {
+sub _link_num {
 
     my ($self, $num) = @_;
     $num = $#{$self->{_links}} unless (defined $num);
@@ -141,7 +143,7 @@ sub text {
     my ($self, $type, $num, $href) = @_;
     $href = $self->{_links}->[$#{$self->{_links}}]
             unless (defined $num and defined $href);
-    $num = $self->link_num($num);
+    $num = $self->_link_num($num);
     my $text = $self->{$type};
     $text =~ s/%n/$num/g;
     $text =~ s/%l/$href/g;
@@ -152,6 +154,9 @@ sub parse {
 
     my $self = shift;
     my $text = shift;
+
+    return undef unless defined $text;
+    return '' if $text eq '';
 
     my $tree = HTML::TreeBuilder->new->parse( $text );
 
@@ -337,6 +342,11 @@ HTML::TreeBuilder failed.
 When passing HTML fragments the results may be a little unpredictable. 
 I've tried to work round the most egregious of the issues but any 
 unexpected results are welcome. 
+
+Also note that if for some reason there is an a tag in the document
+that does not have an href attribute then it will be quietly ignored.
+If this is really a problem for anyone then let me know and I'll see
+if I can think of a sensible thing to do in this case.
 
 =head1 AUTHOR
 

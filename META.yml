@@ -1,18 +1,22 @@
---- #YAML:1.0
+---
 name: HTML-FormatText-WithLinks
-version: 0.02
+version: 0.03
+author:
+  - Struan Donald. E<lt>struan@cpan.orgE<gt>
+  - L<http://www.exo.org.uk/code/>
+  - |-
+    Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom 
+    formatting bits and the nudge to release the code.
+abstract: HTML to text conversion with links as footnotes
 license: perl
-distribution_type: module
 requires:
   HTML::FormatText: 0
   HTML::TreeBuilder: 0
   URI::WithBase: 0
-recommends: {}
 build_requires:
   Test::More: 0
-conflicts: {}
 provides:
   HTML::FormatText::WithLinks:
     file: lib/HTML/FormatText/WithLinks.pm
-    version: 0.02
-generated_by: Module::Build version 0.21
+    version: 0.03
+generated_by: Module::Build version 0.25
