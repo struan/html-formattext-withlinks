@@ -322,6 +322,9 @@ If set to 1 then italicised text will be surrounded by / and bolded text by _.
 
 Takes some HTML and returns it as text. Returns undef on error.
 
+Will also return undef if you don't pass it undef. Returns an empty 
+string if passed an empty string.
+
 =head2 parse_file
 
     my $text = $f->parse_file($filename);
