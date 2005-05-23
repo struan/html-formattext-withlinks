@@ -184,7 +184,7 @@ sub _parse {
     my $tree = shift;
 
     unless ( $tree ) {
-        $self->error("HTML::TreeBuilder problem" . $! ? ": $!" : '');
+        $self->error( "HTML::TreeBuilder problem" . ( $! ? ": $!" : '' ) );
         return undef;
     }
     $tree->eof();

@@ -16,6 +16,7 @@ t/08_custom_format.t
 t/09_with_emphasis.t
 t/10_no_html_passed.t
 t/11_parse_a_with_no_href.t
-t/98_podcover.t
-t/99_pod.t
+t/12_treebuilder_problem.t
+t/98_pod.t
+t/99_podcover.t
 t/file.html
