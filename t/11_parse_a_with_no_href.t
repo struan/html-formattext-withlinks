@@ -23,7 +23,7 @@ my $f2 = HTML::FormatText::WithLinks->new( leftmargin => 0,
                                            base       => 'http://example.com' );
 ok($f2, 'object created');
 
-my $text = $f2->parse($html);
+$text = $f2->parse($html);
 
 my $correct_text = qq!This is a mail of some sort with a link.
 
