@@ -25,12 +25,6 @@ ok($f2, 'object created');
 
 $text = $f2->parse($html);
 
-my $correct_text = qq!This is a mail of some sort with a link.
-
-
-
-!;
-
 ok($text, 'html formatted');
 is($text, $correct_text, 'html with hrefless link and base set correctly formatted');
 
