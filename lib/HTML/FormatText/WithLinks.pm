@@ -160,17 +160,7 @@ sub parse {
 
     my $tree = HTML::TreeBuilder->new->parse( $text );
 
-    unless ( $tree ) {
-        $self->error("HTML::TreeBuilder problem" . $! ? ": $!" : '');
-        return undef;
-    }
-
-    $tree->eof();
-    my $return_text = $self->format( $tree );
-
-    $tree->delete;
-
-    return $return_text;
+    return $self->_parse( $tree );
 }
 
 sub parse_file {
@@ -185,6 +175,14 @@ sub parse_file {
 
     my $tree = HTML::TreeBuilder->new->parse_file( $file );
     
+    return $self->_parse( $tree );
+}
+
+sub _parse {
+
+    my $self = shift;
+    my $tree = shift;
+
     unless ( $tree ) {
         $self->error("HTML::TreeBuilder problem" . $! ? ": $!" : '');
         return undef;
@@ -197,6 +195,7 @@ sub parse_file {
 
     return $return_text;
 }
+    
 
 sub error {
     my $self = shift;
