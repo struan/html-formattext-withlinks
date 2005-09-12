@@ -1,5 +1,10 @@
 # Changelog for HTML::FormatText::WithLinks
-version:    0;04
+version:    0.05
+date:       12/09/2005
+    change way skip tests in t/12_treebuilderproblem.t to try and avoid CPAN 
+    testers failure
+---
+version:    0.04
 date:       27/08/2005
     anchors with no href or empty href don't produce footnotes
     some internal refactoring
