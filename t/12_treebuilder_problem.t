@@ -1,8 +1,12 @@
-use Test::More tests => 3;
+use Test::More;
 
 BEGIN {
     eval "use Test::MockObject";
-    plan skip_all => "Test::MockObject  required for testing TreeBuilder problems" if $@;
+    if ( $@ ) {
+        plan skip_all => "Test::MockObject  required for testing TreeBuilder problems";
+    } else {
+        plan tests => 3;
+    }
 
     my $m = Test::MockObject->new();
     $m->fake_new( 'HTML::TreeBuilder' );
