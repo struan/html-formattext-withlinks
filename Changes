@@ -1,4 +1,8 @@
 # Changelog for HTML::FormatText::WithLinks
+version:    0.06
+date:       06/10/2005
+    add in missing ; to use line in examples in POD and README (rt #14777)
+---
 version:    0.05
 date:       12/09/2005
     change way skip tests in t/12_treebuilderproblem.t to try and avoid CPAN 
