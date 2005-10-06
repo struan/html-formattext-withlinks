@@ -215,7 +215,7 @@ HTML::FormatText::WithLinks - HTML to text conversion with links as footnotes
 
 =head1 SYNOPSIS
 
-    use HTML::FormatText::WithLinks
+    use HTML::FormatText::WithLinks;
 
     my $f = HTML::FormatText::WithLinks->new();
 

@@ -1,6 +1,6 @@
 ---
 name: HTML-FormatText-WithLinks
-version: 0.04
+version: 0.05
 author:
   - Struan Donald. E<lt>struan@cpan.orgE<gt>
   - L<http://www.exo.org.uk/code/>
@@ -18,5 +18,5 @@ build_requires:
 provides:
   HTML::FormatText::WithLinks:
     file: lib/HTML/FormatText/WithLinks.pm
-    version: 0.04
+    version: 0.05
 generated_by: Module::Build version 0.25
