@@ -29,14 +29,10 @@ sub configure {
     delete $hash->{base};
     $self->{base} =~ s#(.*?)/[^/]*$#$1/# if $self->{base};
 
-    $self->{_links} = ();
-
     $self->{before_link} = '[%n]';
     $self->{after_link} = '';
     $self->{footnote} = '%n. %l';
     $self->{link_num_generator} = sub { return shift() + 1 };
-
-    $self->{_add_link} = \&_non_unique_links;
 
     foreach ( qw( before_link after_link footnote link_num_generator 
                   with_emphasis ) ) {
@@ -57,47 +53,38 @@ sub textflow {
     $self->SUPER::textflow(@_);
 }
 
-sub _unique_links
-{
-    my ($self, $href) = @_;
-    my $num = $self->{_href2num}->{$href};
-    unless (defined $num) {
-        $num = 1 + $#{$self->{_num2href}||[]};
-        $self->{_href2num}->{$href} = $num;
-        $self->{_num2href}->[$num] = $href;
-    }
-    return $num;
-}
-
-sub _non_unique_links
-{
-    my ($self, $href) = @_;
-    push @{$self->{_links}}, $href;
-    return $#{$self->{_links}};
-}
-
-sub a {
-    my ($self, $node, $type) = @_;
-    # local urls are no use so we have to make them absolute
-    my $href = $node->attr('href');
-    if ($href) {
-        $href = URI::WithBase->new($href, $self->{base})->abs() || $href;
-        my $num = $self->{_add_link}->($href);
-        my $text = $self->text($type, $num, $href);
-        $self->out($text) if $text;
-    }
-}
-
 sub a_start {
-    my ($self, $node) = @_;
-    $self->a($node, 'before_link');
+
+    my $self = shift;
+    my $node = shift;
+    # local urls are no use so we have to make them absolute
+    my $href = $node->attr('href') || '';
+    if ( $href ) {
+        if ($href =~ m#^http:|^mailto:#) {
+            push @{$self->{_links}}, $href;
+        } else {
+            my $u = URI::WithBase->new($href, $self->{base});
+            push @{$self->{_links}}, $u->abs();
+        }
+        $self->out( $self->text('before_link') );
+    }
     $self->SUPER::a_start();
+
 }
 
 sub a_end {
-    my ($self, $node) = @_;
-    $self->a($node, 'after_link');
+
+    my $self = shift;
+    my $node = shift;
+    my $text = $self->text('after_link');
+# If we're just dealing with a fragment of HTML, with a link at the
+# end, we get a space before the first footnote link if we do 
+# $self->out( '' )
+    if ($text ne '') {
+        $self->out( $text );
+    }
     $self->SUPER::a_end();
+
 }
 
 sub b_start {
@@ -128,20 +115,26 @@ sub i_end {
 sub html_end {
 
     my $self = shift;
-    if ( $$self{_num2href} and $self->{footnote} ) {
+    if ( $self->{_links} and @{$self->{_links}} and $self->{footnote} ) {
         $self->nl; $self->nl; # be tidy
         $self->goto_lm;
-        for my $num (0 .. $#{$$self{_num2href}}) {
-            my $href = $$self{_num2href}[$num];
-            next unless $href;
+        for (0 .. $#{$self->{_links}}) {
             $self->goto_lm;
             $self->out(
-                $self->text( 'footnote', $num, $href )
+                $self->text( 'footnote', $_, $self->{_links}->[$_] )
             );
             $self->nl;
         }
     }
     $self->SUPER::end();
+
+}
+
+sub _link_num {
+
+    my ($self, $num) = @_;
+    $num = $#{$self->{_links}} unless (defined $num);
+    return &{$self->{link_num_generator}}($num);
 
 }
 
@@ -152,7 +145,7 @@ sub text {
         $href = $self->{_links}->[$#{$self->{_links}}]
                 unless (defined $num and defined $href);
     }
-    $num = &{$self->{link_num_generator}}($num);
+    $num = $self->_link_num($num);
     my $text = $self->{$type};
     $text =~ s/%n/$num/g;
     $text =~ s/%l/$href/g;
@@ -367,9 +360,6 @@ L<http://www.exo.org.uk/code/>
 
 Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom 
 formatting bits and the nudge to release the code.
-
-Alexey Tourbin supplied a patch to make multiple references to the same
-URI produce the same footnote.
 
 =head1 COPYRIGHT
 
