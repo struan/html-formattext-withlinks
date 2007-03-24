@@ -29,10 +29,14 @@ sub configure {
     delete $hash->{base};
     $self->{base} =~ s#(.*?)/[^/]*$#$1/# if $self->{base};
 
+    $self->{_links} = ();
+
     $self->{before_link} = '[%n]';
     $self->{after_link} = '';
     $self->{footnote} = '%n. %l';
     $self->{link_num_generator} = sub { return shift() + 1 };
+
+    $self->{_add_link} = \&_non_unique_links;
 
     foreach ( qw( before_link after_link footnote link_num_generator 
                   with_emphasis ) ) {
@@ -53,18 +57,32 @@ sub textflow {
     $self->SUPER::textflow(@_);
 }
 
+sub _unique_links
+{
+    my ($self, $href) = @_;
+    my $num = $self->{_href2num}->{$href};
+    unless (defined $num) {
+        $num = 1 + $#{$self->{_num2href}||[]};
+        $self->{_href2num}->{$href} = $num;
+        $self->{_num2href}->[$num] = $href;
+    }
+    return $num;
+}
+
+sub _non_unique_links
+{
+    my ($self, $href) = @_;
+    push @{$self->{_links}}, $href;
+    return $#{$self->{_links}};
+}
+
 sub a {
     my ($self, $node, $type) = @_;
     # local urls are no use so we have to make them absolute
     my $href = $node->attr('href');
     if ($href) {
         $href = URI::WithBase->new($href, $self->{base})->abs() || $href;
-        my $num = $$self{_href2num}{$href};
-        unless (defined $num) {
-            $num = 1 + $#{$$self{_num2href}||[]};
-            $$self{_href2num}{$href} = $num;
-            $$self{_num2href}[$num] = $href;
-        }
+        my $num = $self->{_add_link}->($href);
         my $text = $self->text($type, $num, $href);
         $self->out($text) if $text;
     }
@@ -349,6 +367,9 @@ L<http://www.exo.org.uk/code/>
 
 Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom 
 formatting bits and the nudge to release the code.
+
+Alexey Tourbin supplied a patch to make multiple references to the same
+URI produce the same footnote.
 
 =head1 COPYRIGHT
 
