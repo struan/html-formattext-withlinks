@@ -53,38 +53,33 @@ sub textflow {
     $self->SUPER::textflow(@_);
 }
 
-sub a_start {
-
-    my $self = shift;
-    my $node = shift;
+sub a {
+    my ($self, $node, $type) = @_;
     # local urls are no use so we have to make them absolute
-    my $href = $node->attr('href') || '';
-    if ( $href ) {
-        if ($href =~ m#^http:|^mailto:#) {
-            push @{$self->{_links}}, $href;
-        } else {
-            my $u = URI::WithBase->new($href, $self->{base});
-            push @{$self->{_links}}, $u->abs();
+    my $href = $node->attr('href');
+    if ($href) {
+        $href = URI::WithBase->new($href, $self->{base})->abs() || $href;
+        my $num = $$self{_href2num}{$href};
+        unless (defined $num) {
+            $num = 1 + $#{$$self{_num2href}||[]};
+            $$self{_href2num}{$href} = $num;
+            $$self{_num2href}[$num] = $href;
         }
-        $self->out( $self->text('before_link') );
+        my $text = $self->text($type, $num, $href);
+        $self->out($text) if $text;
     }
-    $self->SUPER::a_start();
+}
 
+sub a_start {
+    my ($self, $node) = @_;
+    $self->a($node, 'before_link');
+    $self->SUPER::a_start();
 }
 
 sub a_end {
-
-    my $self = shift;
-    my $node = shift;
-    my $text = $self->text('after_link');
-# If we're just dealing with a fragment of HTML, with a link at the
-# end, we get a space before the first footnote link if we do 
-# $self->out( '' )
-    if ($text ne '') {
-        $self->out( $text );
-    }
+    my ($self, $node) = @_;
+    $self->a($node, 'after_link');
     $self->SUPER::a_end();
-
 }
 
 sub b_start {
@@ -115,26 +110,20 @@ sub i_end {
 sub html_end {
 
     my $self = shift;
-    if ( $self->{_links} and @{$self->{_links}} and $self->{footnote} ) {
+    if ( $$self{_num2href} and $self->{footnote} ) {
         $self->nl; $self->nl; # be tidy
         $self->goto_lm;
-        for (0 .. $#{$self->{_links}}) {
+        for my $num (0 .. $#{$$self{_num2href}}) {
+            my $href = $$self{_num2href}[$num];
+            next unless $href;
             $self->goto_lm;
             $self->out(
-                $self->text( 'footnote', $_, $self->{_links}->[$_] )
+                $self->text( 'footnote', $num, $href )
             );
             $self->nl;
         }
     }
     $self->SUPER::end();
-
-}
-
-sub _link_num {
-
-    my ($self, $num) = @_;
-    $num = $#{$self->{_links}} unless (defined $num);
-    return &{$self->{link_num_generator}}($num);
 
 }
 
@@ -145,7 +134,7 @@ sub text {
         $href = $self->{_links}->[$#{$self->{_links}}]
                 unless (defined $num and defined $href);
     }
-    $num = $self->_link_num($num);
+    $num = &{$self->{link_num_generator}}($num);
     my $text = $self->{$type};
     $text =~ s/%n/$num/g;
     $text =~ s/%l/$href/g;
