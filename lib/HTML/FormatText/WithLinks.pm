@@ -6,7 +6,7 @@ use HTML::TreeBuilder;
 use base qw(HTML::FormatText);
 use vars qw($VERSION);
 
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 sub new {
 
@@ -34,8 +34,12 @@ sub configure {
     $self->{footnote} = '%n. %l';
     $self->{link_num_generator} = sub { return shift() + 1 };
 
+    $self->{unique_links} = 0;
+
+    $self->{_link_track} = {};
+
     foreach ( qw( before_link after_link footnote link_num_generator 
-                  with_emphasis ) ) {
+                  with_emphasis unique_links ) ) {
         $self->{ $_ } = $hash->{ $_ } if exists $hash->{ $_ };
         delete $hash->{ $_ };
     }
@@ -60,13 +64,23 @@ sub a_start {
     # local urls are no use so we have to make them absolute
     my $href = $node->attr('href') || '';
     if ( $href ) {
-        if ($href =~ m#^http:|^mailto:#) {
-            push @{$self->{_links}}, $href;
-        } else {
-            my $u = URI::WithBase->new($href, $self->{base});
-            push @{$self->{_links}}, $u->abs();
+        if ($href !~ m#^http:|^mailto:#) {
+            $href = URI::WithBase->new($href, $self->{base})->abs();
         }
-        $self->out( $self->text('before_link') );
+        if ($self->{unique_links})
+        {
+            if (defined $self->{_link_track}->{$href})
+            {
+                $self->out( $self->text('before_link', $self->{_link_track}->{$href}, $href ) );
+            } else {
+                push @{$self->{_links}}, $href;
+                $self->{_link_track}->{$href} = $#{$self->{_links}};
+                $self->out( $self->text('before_link', $#{$self->{_links}}, $href ) );
+            }
+        } else {
+            push @{$self->{_links}}, $href;
+            $self->out( $self->text('before_link') );
+        }
     }
     $self->SUPER::a_start();
 
@@ -76,7 +90,14 @@ sub a_end {
 
     my $self = shift;
     my $node = shift;
-    my $text = $self->text('after_link');
+    my $text;
+    if ($self->{unique_links})
+    {
+        my $href = $node->attr('href');
+        $text = $self->text('after_link', $self->{_link_track}->{$href}, $href);
+    } else {
+        $text = $self->text('after_link');
+    }
 # If we're just dealing with a fragment of HTML, with a link at the
 # end, we get a space before the first footnote link if we do 
 # $self->out( '' )
@@ -133,7 +154,7 @@ sub html_end {
 sub _link_num {
 
     my ($self, $num) = @_;
-    $num = $#{$self->{_links}} unless (defined $num);
+    $num = $#{$self->{_links}} unless defined $num;
     return &{$self->{link_num_generator}}($num);
 
 }
@@ -141,6 +162,7 @@ sub _link_num {
 sub text {
 
     my ($self, $type, $num, $href) = @_;
+
     if ($self->{_links} and @{$self->{_links}}) {
         $href = $self->{_links}->[$#{$self->{_links}}]
                 unless (defined $num and defined $href);
@@ -314,6 +336,10 @@ given link number. The internal store starts numbering at 0.
 =item with_emphasis
 
 If set to 1 then italicised text will be surrounded by / and bolded text by _.
+
+=item unique_links
+
+If set to 1 then will only generate 1 footnote per unique URI as oppose to the default behaviour which is to generate a footnote per URI.
 
 =back
 
