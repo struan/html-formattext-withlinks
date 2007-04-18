@@ -1,4 +1,8 @@
 # Changelog for HTML::FormatText::WithLinks
+version:    0.09
+date:       18/04/2007
+    added in examples directory
+---
 version:    0.08
 date:       26/03/2007
     add in unique_links config option (rt #24713)
