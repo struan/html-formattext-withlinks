@@ -1,4 +1,10 @@
 # Changelog for HTML::FormatText::WithLinks
+version:    0.10
+date:       21/07/2008
+    added anchor_links config option <Simon Dessau> (rt #37634)
+    compile regex and make it work with https <Simon Dessau> (rt #37634)
+    reset internal link collectors when call parse so object can be reused < Simon Dessau> (rt #37636)
+---
 version:    0.09
 date:       18/04/2007
     added in examples directory
