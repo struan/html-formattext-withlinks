@@ -6,6 +6,9 @@ author:
   - |-
     Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom 
     formatting bits and the nudge to release the code.
+  - |-
+    Simon Dassow E<lt>janus@errornet.de<gt> for the anchor_links option plus 
+    a few bugfixes and optimsations
 abstract: HTML to text conversion with links as footnotes
 license: perl
 resources:
