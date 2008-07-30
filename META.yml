@@ -1,6 +1,6 @@
 ---
 name: HTML-FormatText-WithLinks
-version: 0.10
+version: 0.11
 author:
   - 'Struan Donald. E<lt>struan@cpan.orgE<gt>'
   - |-
@@ -22,7 +22,7 @@ build_requires:
 provides:
   HTML::FormatText::WithLinks:
     file: lib/HTML/FormatText/WithLinks.pm
-    version: 0.10
+    version: 0.11
 generated_by: Module::Build version 0.280801
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html

@@ -1,5 +1,9 @@
 # Changelog for HTML::FormatText::WithLinks
 version:    0.10
+date:       30/07/2008
+    failed to actually include any of the mentioned things in the previous release so re-releasing with the things actually there. sigh.
+---
+version:    0.10
 date:       21/07/2008
     added anchor_links config option <Simon Dessau> (rt #37634)
     compile regex and make it work with https <Simon Dessau> (rt #37634)
