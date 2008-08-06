@@ -407,6 +407,8 @@ a few bugfixes and optimsations
 
 Copyright (C) 2003 Struan Donald and Ian Malpass. All rights reserved.
 
+=head1 LICENSE
+
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 
