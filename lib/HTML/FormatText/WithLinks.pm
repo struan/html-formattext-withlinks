@@ -6,7 +6,7 @@ use HTML::TreeBuilder;
 use base qw(HTML::FormatText);
 use vars qw($VERSION);
 
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 sub new {
 
@@ -28,6 +28,9 @@ sub configure {
     $self->{base} = $hash->{base};
     delete $hash->{base};
     $self->{base} =~ s#(.*?)/[^/]*$#$1/# if $self->{base};
+
+    $self->{doc_overrides_base} = $hash->{doc_overrides_base};
+    delete $hash->{doc_overrides_base};
 
     $self->{before_link} = '[%n]';
     $self->{after_link} = '';
@@ -57,6 +60,38 @@ sub textflow {
     my $self = shift;
     $self->goto_lm unless defined $self->{cur_pos}; 
     $self->SUPER::textflow(@_);
+}
+
+sub head_start {
+    my ($self) = @_;
+    $self->SUPER::head_start();
+
+    # we don't care about what the documens says it's base is
+    if ( $self->{base} and not $self->{doc_overrides_base} ) {
+        return 0;
+    }
+
+    # descend into <head> for possible <base> there, even if superclass not
+    # interested (as of HTML::FormatText 2.04 it's not)
+    return 1;
+}
+
+# <base> is supposed to be inside <head>, but no need to demand that.
+# "lynx -source" sticks a <base> at the very start of the document, before
+# even <html>, so accepting <base> anywhere lets that work.
+sub base_start {
+    my ($self, $node) = @_;
+    if (my $href = $node->attr('href')) {
+        $self->{base} = $href;
+    }
+
+    # allow for no superclass base_start() in HTML::FormatText 2.04
+    if (! HTML::FormatText->can('base_start')) {
+        return 0;
+    }
+
+    # chain up if it exists in the future
+    return $self->SUPER::base_start();
 }
 
 sub a_start {
@@ -321,6 +356,12 @@ Returns a new instance. It accepts all the options of HTML::FormatText plus
 a base option. This should be set to a URI which will be used to turn any 
 relative URIs on the HTML to absolute ones.
 
+=item doc_overrides_base
+
+If a base element is found in the document and it has an href attribute
+then setting doc_overrides_base to true will cause the document's base
+to be used. This defaults to false.
+
 =item before_link (default: '[%n]')
 
 =item after_link (default: '')
@@ -401,11 +442,13 @@ Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom
 formatting bits and the nudge to release the code.
 
 Simon Dassow E<lt>janus@errornet.de<gt> for the anchor_links option plus 
-a few bugfixes and optimsations
+a few bugfixes and optimisations
+
+Kevin Ryde for the code for pulling the base out the document.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Struan Donald and Ian Malpass. All rights reserved.
+Copyright (C) 2003-2010 Struan Donald and Ian Malpass. All rights reserved.
 
 =head1 LICENSE
 
