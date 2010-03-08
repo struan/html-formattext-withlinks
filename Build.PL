@@ -6,7 +6,7 @@ Module::Build
         module_name =>  "HTML::FormatText::WithLinks",
         license     =>  'perl',
         requires    =>  {
-                            'HTML::FormatText'    =>  0,
+                            'HTML::FormatText'    =>  2,
                             'HTML::TreeBuilder'   =>  0,
                             'URI::WithBase'       =>  0,  
         },
