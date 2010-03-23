@@ -1,5 +1,10 @@
 # Changelog for HTML::FormatText::WithLinks
-version:    0.10
+version:    0.12
+date:       23/03/2010       
+    Updated HTML::FormatText dependancy to require version 2+
+    Added code to pull out the base from the base element in a document <Kevin Ryde> (rt #55238)
+---
+version:    0.11
 date:       30/07/2008
     failed to actually include any of the mentioned things in the previous release so re-releasing with the things actually there. sigh.
 ---
