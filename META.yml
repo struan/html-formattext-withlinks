@@ -1,29 +1,27 @@
 ---
-name: HTML-FormatText-WithLinks
-version: 0.11
+abstract: 'HTML to text conversion with links as footnotes'
 author:
   - 'Struan Donald. E<lt>struan@cpan.orgE<gt>'
-  - |-
-    Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom 
-    formatting bits and the nudge to release the code.
-  - |-
-    Simon Dassow E<lt>janus@errornet.de<gt> for the anchor_links option plus 
-    a few bugfixes and optimsations
-abstract: HTML to text conversion with links as footnotes
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
-requires:
-  HTML::FormatText: 0
-  HTML::TreeBuilder: 0
-  URI::WithBase: 0
+  - "Ian Malpass E<lt>ian@indecorous.comE<gt> was responsible for the custom \nformatting bits and the nudge to release the code."
+  - "Simon Dassow E<lt>janus@errornet.de<gt> for the anchor_links option plus \na few bugfixes and optimisations"
 build_requires:
   Test::More: 0
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3603'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: HTML-FormatText-WithLinks
 provides:
   HTML::FormatText::WithLinks:
     file: lib/HTML/FormatText/WithLinks.pm
-    version: 0.11
-generated_by: Module::Build version 0.280801
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+    version: 0.12
+requires:
+  HTML::FormatText: 2
+  HTML::TreeBuilder: 0
+  URI::WithBase: 0
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.12
