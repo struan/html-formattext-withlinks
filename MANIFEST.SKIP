@@ -11,3 +11,5 @@ CVS
 .#.*
 ^cover_db
 \.svn
+^MYMETA.yml$
+\.git
