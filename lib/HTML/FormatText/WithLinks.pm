@@ -41,10 +41,12 @@ sub configure {
 
     $self->{anchor_links} = 1;
 
+    $self->{skip_linked_urls} = 0;
+
     $self->{_link_track} = {};
 
     foreach ( qw( before_link after_link footnote link_num_generator 
-                  with_emphasis unique_links anchor_links ) ) {
+                  with_emphasis unique_links anchor_links skip_linked_urls ) ) {
         $self->{ $_ } = $hash->{ $_ } if exists $hash->{ $_ };
         delete $hash->{ $_ };
     }
@@ -103,6 +105,9 @@ sub a_start {
     if ($href && $self->{anchor_links} == 0 && $href =~ m/^#/o) {
         $href = '';
     }
+    elsif ($href and $self->{skip_linked_urls} and $href eq $node->as_text) {
+        $href = '';
+    }
     if ( $href ) {
         if ($href !~ m#^https?:|^mailto:#o) {
             $href = URI::WithBase->new($href, $self->{base})->abs();
@@ -131,18 +136,20 @@ sub a_end {
     my $self = shift;
     my $node = shift;
     my $text;
-    if ($self->{unique_links})
-    {
-        my $href = $node->attr('href');
-        $text = $self->text('after_link', $self->{_link_track}->{$href}, $href);
-    } else {
-        $text = $self->text('after_link');
-    }
+    unless ($self->{skip_linked_urls} and $node->attr('href') eq $node->as_text) {
+        if ($self->{unique_links})
+        {
+            my $href = $node->attr('href');
+            $text = $self->text('after_link', $self->{_link_track}->{$href}, $href);
+        } else {
+            $text = $self->text('after_link');
+        }
 # If we're just dealing with a fragment of HTML, with a link at the
 # end, we get a space before the first footnote link if we do 
 # $self->out( '' )
-    if ($text ne '') {
-        $self->out( $text );
+        if ($text ne '') {
+            $self->out( $text );
+        }
     }
     $self->SUPER::a_end();
 
@@ -395,6 +402,11 @@ If set to 1 then will only generate 1 footnote per unique URI as oppose to the d
 If set to 0 then links pointing to local anchors will be skipped.
 The default behaviour is to include all links.
 
+=item skip_linked_urls
+
+If set to 1, then links where the text equals the href value will be skipped.
+The default behaviour is to include all links.
+
 =back
 
 =head2 parse
@@ -445,6 +457,8 @@ Simon Dassow E<lt>janus@errornet.de<gt> for the anchor_links option plus
 a few bugfixes and optimisations
 
 Kevin Ryde for the code for pulling the base out the document.
+
+Thomas Sibley E<lt>trs@bestpractical.comE<gt> for the skip linked urls code.
 
 =head1 COPYRIGHT
 
