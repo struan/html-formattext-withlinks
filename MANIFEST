@@ -26,5 +26,6 @@ t/parse_with_name.t
 t/parse_with_relative_links.t
 t/pod.t
 t/podcover.t
+t/skip_linked_urls.t
 t/treebuilder_problem.t
 t/with_emphasis.t
