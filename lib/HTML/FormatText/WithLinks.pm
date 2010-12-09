@@ -6,7 +6,7 @@ use HTML::TreeBuilder;
 use base qw(HTML::FormatText);
 use vars qw($VERSION);
 
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 sub new {
 
@@ -464,7 +464,7 @@ a few bugfixes and optimisations
 
 Kevin Ryde for the code for pulling the base out the document.
 
-Thomas Sibley E<lt>trs@bestpractical.comE<gt> for the skip linked urls code.
+Thomas Sibley E<lt>trs@bestpractical.comE<gt> patches for skipping links that are their urls and to change the delimiters for bold and italic text..
 
 =head1 COPYRIGHT
 

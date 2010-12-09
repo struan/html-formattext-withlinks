@@ -1,4 +1,8 @@
 # Changelog for HTML::FormatText::WithLinks
+version:    0.13
+date:       9/12/2010
+    Added code to change the delimiters for italic and bold text <Thomas Sibley> (rt #63571)
+---
 version:    0.12
 date:       27/11/2010       
     Updated HTML::FormatText dependancy to require version 2+
