@@ -1,4 +1,8 @@
 # Changelog for HTML::FormatText::WithLinks
+version:    0.14
+date:       9/12/2010
+    Missed the skipped links test from the MANIFEST :(
+---
 version:    0.13
 date:       9/12/2010
     Added code to change the delimiters for italic and bold text <Thomas Sibley> (rt #63571)

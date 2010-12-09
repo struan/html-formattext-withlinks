@@ -6,7 +6,7 @@ use HTML::TreeBuilder;
 use base qw(HTML::FormatText);
 use vars qw($VERSION);
 
-$VERSION = '0.13';
+$VERSION = '0.14';
 
 sub new {
 
