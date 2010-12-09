@@ -45,8 +45,12 @@ sub configure {
 
     $self->{_link_track} = {};
 
+    $self->{bold_marker}    = '_';
+    $self->{italic_marker}  = '/';
+
     foreach ( qw( before_link after_link footnote link_num_generator 
-                  with_emphasis unique_links anchor_links skip_linked_urls ) ) {
+                  with_emphasis bold_marker italic_marker
+                  unique_links anchor_links skip_linked_urls ) ) {
         $self->{ $_ } = $hash->{ $_ } if exists $hash->{ $_ };
         delete $hash->{ $_ };
     }
@@ -157,25 +161,25 @@ sub a_end {
 
 sub b_start {
     my $self = shift;
-    $self->out( '_' ) if $self->{ with_emphasis };
+    $self->out( $self->{'bold_marker'} ) if $self->{ with_emphasis };
     $self->SUPER::b_start();
 }
 
 sub b_end {
     my $self = shift;
-    $self->out( '_' ) if $self->{ with_emphasis };
+    $self->out( $self->{'bold_marker'} ) if $self->{ with_emphasis };
     $self->SUPER::b_end();
 }
 
 sub i_start {
     my $self = shift;
-    $self->out( '/' ) if $self->{ with_emphasis };
+    $self->out( $self->{'italic_marker'} ) if $self->{ with_emphasis };
     $self->SUPER::i_start();
 }
 
 sub i_end {
     my $self = shift;
-    $self->out( '/' ) if $self->{ with_emphasis };
+    $self->out( $self->{'italic_marker'} ) if $self->{ with_emphasis };
     $self->SUPER::i_end();
 }
 
@@ -391,7 +395,9 @@ given link number. The internal store starts numbering at 0.
 
 =item with_emphasis
 
-If set to 1 then italicised text will be surrounded by / and bolded text by _.
+If set to 1 then italicised text will be surrounded by C</> and bolded text by
+C<_>.  You can change these markers by using the C<italic_marker> and
+C<bold_marker> options.
 
 =item unique_links
 
