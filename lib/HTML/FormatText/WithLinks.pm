@@ -466,6 +466,11 @@ Kevin Ryde for the code for pulling the base out the document.
 
 Thomas Sibley E<lt>trs@bestpractical.comE<gt> patches for skipping links that are their urls and to change the delimiters for bold and italic text..
 
+=head1 SOURCE CODE
+
+The source code for this module is hosted on GitHub
+L<http://github.com/struan/html-formattext-withlinks>
+
 =head1 COPYRIGHT
 
 Copyright (C) 2003-2010 Struan Donald and Ian Malpass. All rights reserved.
