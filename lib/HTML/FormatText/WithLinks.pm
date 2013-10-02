@@ -72,7 +72,7 @@ sub head_start {
     my ($self) = @_;
     $self->SUPER::head_start();
 
-    # we don't care about what the documens says it's base is
+    # we don't care about what the documents says it's base is
     if ( $self->{base} and not $self->{doc_overrides_base} ) {
         return 0;
     }
@@ -435,7 +435,7 @@ Returns undef on error.
 
     $f->error();
 
-Returns the last error that occured. In practice this is likely to be 
+Returns the last error that occurred. In practice this is likely to be 
 either a warning that parse_file couldn't find the file or that
 HTML::TreeBuilder failed.
 
