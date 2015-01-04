@@ -421,7 +421,7 @@ The default behaviour is to include all links.
 
 Takes some HTML and returns it as text. Returns undef on error.
 
-Will also return undef if you don't pass it undef. Returns an empty 
+Will also return undef if you pass it undef. Returns an empty
 string if passed an empty string.
 
 =head2 parse_file
